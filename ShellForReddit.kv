@@ -1,0 +1,79 @@
+#:kivy 1.10.0
+#:import hex kivy.utils.get_color_from_hex
+#:import Text Constants
+
+<ScrollableLabel>:
+    orientation: 'vertical'
+    stackid: stackid
+    Label:
+        canvas.before:
+            Color:
+                rgba: hex('#111113')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        text: Text.getHeading()
+        font_size: 30
+        font_name: "Capture"
+        text_size: self.width, None
+        size_hint_y: None
+        height: self.texture_size[1]
+
+    Label:
+        canvas.before:
+            Color:
+                rgba: hex('#111113')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        text: Text.getInfo()
+        font_size: 13
+        text_size: self.width, None
+        size_hint_y: None
+        height: self.texture_size[1]
+        markup: True
+
+    Label:
+        canvas.before:
+            Color:
+                rgba: hex('#111113')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        text: Text.getCommands()
+        font_size: 13
+        text_size: self.width, None
+        size_hint_y: None
+        height: self.texture_size[1]
+        markup: True
+
+    ScrollView:
+        size: self.size
+        StackLayout:
+            orientation: 'lr-tb'
+            id: stackid
+            Label:
+                id: labelid
+                padding_y: 2
+                pos_hint: {'top': 1}
+                text: root.idvalue
+                font_size: 13
+                size_hint_y: None
+                text_size: self.width, None
+                height: self.texture_size[1]
+                markup: True
+
+            TextInput:
+                id: inputvalue
+                font_size: 13
+                pos_hint: {'top': 1}
+                size_hint_y: None
+                height: 25
+                focus: True
+                cursor_width: '7sp'
+                cursor_color: 0.6, 0.56, 0.56, 1
+                background_color: 0, 0, 0, 0
+                foreground_color: 1, 1, 1, 1
+                multiline: False
+                on_text_validate:
+                    root.runCommand(inputvalue)
