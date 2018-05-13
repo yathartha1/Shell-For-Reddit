@@ -2,7 +2,7 @@ def getHeading():
     return (" Shell For Reddit")
 
 def getInfo():
-    return (" [color=#9B9191][b][i]shell emulator for browsing reddit via command line[/i][/b][/color] \n ")
+    return (" [color=#9B9191][b][i]shell emulator for browsing reddit via command line[/i] - by Yathartha Goel[/b][/color] \n ")
 
 def getCommands():
     return (" [b]list [next|previous] [color=#9B9191][i]list posts from the front page and navigate results[/i][/b][/color] \n"
