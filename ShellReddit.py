@@ -18,6 +18,7 @@ base_commands = ['cls','set','search','view','ls']
 links = []
 listed = False
 listofsubmissions = []
+listofcomments = []
 countlist = 0
 
 class ScrollableLabel(BoxLayout):
@@ -137,7 +138,7 @@ class ScrollableLabel(BoxLayout):
 
             for listvals in submissions:
                 listofsubmissions.append(listvals)
-            self.handleMovement(command[1])
+            self.handleMoreList(command[1])
 
         elif len(command) == 2 and (command[1] != 'next' or command[1] != 'previous'):
             del links[:]
@@ -164,7 +165,7 @@ class ScrollableLabel(BoxLayout):
 
                 for listvals in submissions:
                     listofsubmissions.append(listvals)
-                self.handleMovement(command[2])
+                self.handleMoreList(command[2])
             else:
                 self.addWrongInput("Command Not Found")
 
@@ -172,7 +173,7 @@ class ScrollableLabel(BoxLayout):
             self.addWrongInput("Command Not Found")
 
 
-    def handleMovement(self,commandval):
+    def handleMoreList(self,commandval):
         global links
         global listed
         global listofsubmissions
@@ -215,8 +216,9 @@ class ScrollableLabel(BoxLayout):
         global listed
         global listofsubmissions
         global countlist
+        global listofcomments
         if listed == True:
-            if len(command)>1:
+            if len(command) == 2:
                 if command[1].isdigit():
                     if int(command[1])<len(links) and int(command[1])>=0:
                         webbrowser.open(links[int(command[1])])
@@ -225,10 +227,27 @@ class ScrollableLabel(BoxLayout):
                         self.addWrongInput("No Such Index")
                 else:
                     self.addWrongInput("Enter an Index")
+
+            elif len(command) == 3:
+                if command[1] == 'comments' and command[2].isdigit():
+                    if int(command[2])<len(listofsubmissions) and int(command[2])>=0:
+                        comments = listofsubmissions[int(command[2])].comments
+                        for comment in comments:
+                            listofcomments.append(comment)
+                        for i in range(0,10):
+                            self.addResults("  [b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofcomments[i].body)
+                        self.addNew()
+                    else:
+                        self.addWrongInput("No Such Index")
+                else:
+                    self.addWrongInput("Command Not Found")
             else:
                 self.addWrongInput("Command Not Found")
         else:
             self.addWrongInput("Nothing to View")
+
+    def handleMoreComments(self,commandval):
+        pass
 
     def __init__(self, **kwargs):
         super(ScrollableLabel, self).__init__(**kwargs)
