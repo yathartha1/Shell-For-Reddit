@@ -18,6 +18,8 @@ LabelBase.register(name = "Capture", fn_regular = "Capture_it_2.ttf")
 base_commands = ['cls','set','search','view','ls']
 links = []
 listed = False
+listofsubmissions = []
+countlist = 0
 
 class ScrollableLabel(BoxLayout):
     stackid=ObjectProperty(None)
@@ -81,34 +83,87 @@ class ScrollableLabel(BoxLayout):
         global base_commands
         global links
         global listed
+        global listofsubmissions
+        global countlist
         val.readonly = True
         val.foreground_color = (0.2, 0.8, 0.2, 1)
         command = val.text.split()
         if len(command)>0:
+
             if command[0] not in base_commands:
                 self.addWrongInput("Command Not Found")
+
             elif command[0] == 'cls':
                 self.ids.stackid.clear_widgets()
                 del links[:]
+                del listofsubmissions[:]
                 listed = False
+                countlist = 0
                 self.addNew()
+
             elif command[0] == 'ls':
-                counter = 0
-                for listvals in reddit.front.hot(limit = 10):
-                    self.addResults("  [color=#9B9191]{ [/color][color=#33cc33][b]"+str(counter)+"[/b][/color][color=#9B9191] }[/color] "+listvals.title)
-                    self.addResults("  [color=#9B9191][i]("+listvals.url+")[/color][/i]")
-                    self.addResults("  [color=#9B9191][i]"+str(listvals.ups)+" Upvotes with "+str(listvals.num_comments)+" Comments[/color][/i]")
-                    links.append(listvals.url)
-                    counter = counter + 1
-                    # pprint.pprint(vars(listvals))
-                listed = True
-                self.addNew()
+                del listofsubmissions[:]
+                submissions = reddit.front.hot(limit = 100)
+
+                for listvals in submissions:
+                    listofsubmissions.append(listvals)
+
+                if len(command) == 1:
+                    del links[:]
+                    for i in range(0,len(listofsubmissions)-90):
+                        self.addResults("  [b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofsubmissions[i].title)
+                        self.addResults("  [color=#9B9191][i]("+listofsubmissions[i].url+")[/color][/i]")
+                        self.addResults("  [color=#9B9191][i]"+str(listofsubmissions[i].ups)+" Upvotes with "+str(listofsubmissions[i].num_comments)+" Comments[/color][/i]")
+                        links.append(listofsubmissions[i].url)
+                        # pprint.pprint(vars(listvals))
+                    listed = True
+                    countlist = 10
+                    self.addResults("  [b][color=#9B9191]{ [/color][color=#cccc00]next[/color][color=#9B9191] }[/color][/b]")
+                    self.addNew()
+
+                elif command[1] == 'next':
+                    if listed == True and countlist<100:
+                        for i in range(countlist,(len(listofsubmissions)-90+countlist)):
+                            self.addResults("  [b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofsubmissions[i].title)
+                            self.addResults("  [color=#9B9191][i]("+listofsubmissions[i].url+")[/color][/i]")
+                            self.addResults("  [color=#9B9191][i]"+str(listofsubmissions[i].ups)+" Upvotes with "+str(listofsubmissions[i].num_comments)+" Comments[/color][/i]")
+                            links.append(listofsubmissions[i].url)
+                        countlist = countlist + 10
+                        if countlist!=100:
+                            self.addResults("  [b][color=#9B9191]{ [/color][color=#cccc00]next | previous[/color][color=#9B9191] }[/color][/b]")
+                        else:
+                            self.addResults("  [b][color=#9B9191]{ [/color][color=#cccc00]previous[/color][color=#9B9191] }[/color][/b]")
+                        self.addNew()
+                    else:
+                        self.addWrongInput("No More Entries Available")
+
+                elif command[1] == 'previous':
+                    if listed == True and countlist>10:
+                        countlist = countlist-10
+                        for i in range(countlist-10,countlist):
+                            self.addResults("  [b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofsubmissions[i].title)
+                            self.addResults("  [color=#9B9191][i]("+listofsubmissions[i].url+")[/color][/i]")
+                            self.addResults("  [color=#9B9191][i]"+str(listofsubmissions[i].ups)+" Upvotes with "+str(listofsubmissions[i].num_comments)+" Comments[/color][/i]")
+                            links.append(listofsubmissions[i].url)
+                        if countlist>10:
+                            self.addResults("  [b][color=#9B9191]{ [/color][color=#cccc00]next | previous[/color][color=#9B9191] }[/color][/b]")
+                        else:
+                            self.addResults("  [b][color=#9B9191]{ [/color][color=#cccc00]next[/color][color=#9B9191] }[/color][/b]")
+                        self.addNew()
+                    else:
+                        self.addWrongInput("No More Entries Available")
+
+                else:
+                    self.addWrongInput("Command Not Found")
+
+
             elif command[0] == 'view':
                 if listed == True:
                     if len(command)>1:
                         if command[1].isdigit():
-                            if int(command[1])<len(links) and int(command[1])>0:
+                            if int(command[1])<len(links) and int(command[1])>=0:
                                 webbrowser.open(links[int(command[1])])
+                                self.addNew()
                             else:
                                 self.addWrongInput("No Such Index")
                         else:
