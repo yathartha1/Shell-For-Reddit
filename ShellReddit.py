@@ -20,6 +20,7 @@ listed = False
 listofsubmissions = []
 listofcomments = []
 countlist = 0
+countcomments = 0
 
 class ScrollableLabel(BoxLayout):
     stackid=ObjectProperty(None)
@@ -85,6 +86,7 @@ class ScrollableLabel(BoxLayout):
         global listed
         global listofsubmissions
         global countlist
+        global listofcomments
         val.readonly = True
         val.foreground_color = (0.2, 0.8, 0.2, 1)
         command = val.text.split()
@@ -97,11 +99,13 @@ class ScrollableLabel(BoxLayout):
                 self.ids.stackid.clear_widgets()
                 del links[:]
                 del listofsubmissions[:]
+                del listofcomments[:]
                 listed = False
                 countlist = 0
                 self.addNew()
 
             elif command[0] == 'ls':
+                del listofcomments[:]
                 self.runlsCommand(command)
 
             elif command[0] == 'view':
@@ -115,7 +119,6 @@ class ScrollableLabel(BoxLayout):
         global listofsubmissions
         global countlist
         del listofsubmissions[:]
-
         if len(command) == 1:
             del links[:]
             submissions = reddit.front.hot(limit = 100)
@@ -180,7 +183,6 @@ class ScrollableLabel(BoxLayout):
         global countlist
         if commandval == 'next':
             if listed == True and countlist<100:
-                print(countlist)
                 for i in range(countlist,(len(listofsubmissions)-90+countlist)):
                     self.addResults("  [b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofsubmissions[i].title)
                     self.addResults("  [color=#9B9191][i]("+listofsubmissions[i].url+")[/color][/i]")
@@ -217,6 +219,7 @@ class ScrollableLabel(BoxLayout):
         global listofsubmissions
         global countlist
         global listofcomments
+        global countcomments
         if listed == True:
             if len(command) == 2:
                 if command[1].isdigit():
@@ -231,14 +234,22 @@ class ScrollableLabel(BoxLayout):
             elif len(command) == 3:
                 if command[1] == 'comments' and command[2].isdigit():
                     if int(command[2])<len(listofsubmissions) and int(command[2])>=0:
+                        del listofcomments[:]
                         comments = listofsubmissions[int(command[2])].comments
                         for comment in comments:
                             listofcomments.append(comment)
                         for i in range(0,10):
                             self.addResults("  [b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofcomments[i].body)
                         self.addNew()
+                        countcomments = 10
                     else:
                         self.addWrongInput("No Such Index")
+
+                elif command[1] == 'more' and command[2] == 'comments':
+                    if len(listofcomments) != 0:
+                        self.handleMoreComments()
+                    else:
+                        self.addWrongInput("Nothing to View")
                 else:
                     self.addWrongInput("Command Not Found")
             else:
@@ -246,8 +257,19 @@ class ScrollableLabel(BoxLayout):
         else:
             self.addWrongInput("Nothing to View")
 
-    def handleMoreComments(self,commandval):
-        pass
+    def handleMoreComments(self):
+        global listofcomments
+        global countcomments
+        temp = 0
+        if countcomments < len(listofcomments):
+            for i in range(countcomments,len(listofcomments)):
+                if (temp<10):
+                    temp = temp + 1
+                    self.addResults("  [b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofcomments[i].body)
+            countcomments = countcomments + temp
+            self.addNew()
+        else:
+            self.addWrongInput("No More Entries Available")
 
     def __init__(self, **kwargs):
         super(ScrollableLabel, self).__init__(**kwargs)
