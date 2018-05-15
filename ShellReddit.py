@@ -14,7 +14,7 @@ reddit = APIAuth.getAuth()
 
 LabelBase.register(name = "Capture", fn_regular = "Capture_it_2.ttf")
 
-base_commands = ['cls','set','search','view','ls']
+base_commands = ['cls','search','view','ls']
 links = []
 listed = False
 listofsubmissions = []
@@ -138,6 +138,10 @@ class ScrollableLabel(BoxLayout):
 
             elif command[0] == 'view':
                 self.runviewCommand(command)
+
+            elif command[0] == 'search':
+                del listofcomments[:]
+                self.runsearchCommand(command)
         else:
             self.addNew()
 
@@ -151,14 +155,14 @@ class ScrollableLabel(BoxLayout):
         global nextpreviousnormal
         global nextprevioussubreddits
         temp = 0
-        del listofsubmissions[:]
-        del listofsubreddits[:]
         if len(command) == 1:
             nextpreviousnormal = False
             nextprevious = False
             nextprevioussubreddits = False
             temp = 0
             del links[:]
+            del listofsubmissions[:]
+            del listofsubreddits[:]
             submissions = reddit.front.hot(limit = 100)
 
             for listvals in submissions:
@@ -180,10 +184,6 @@ class ScrollableLabel(BoxLayout):
 
         elif command[1] == 'next' or command[1] == 'previous':
             if nextpreviousnormal == True:
-                submissions = reddit.front.hot(limit = 100)
-
-                for listvals in submissions:
-                    listofsubmissions.append(listvals)
                 self.handleMoreList(command[1])
             else:
                 self.addWrongInput("Nothing to Display")
@@ -194,6 +194,8 @@ class ScrollableLabel(BoxLayout):
             nextprevioussubreddits = False
             temp = 0
             del links[:]
+            del listofsubmissions[:]
+            del listofsubreddits[:]
             subreddit = reddit.subreddit(command[1])
             submissions = subreddit.hot(limit = 100)
 
@@ -220,6 +222,8 @@ class ScrollableLabel(BoxLayout):
             nextprevioussubreddits = False
             temp = 0
             del links[:]
+            del listofsubmissions[:]
+            del listofsubreddits[:]
             subreddits = reddit.subreddits.popular(limit = 100)
 
             for listvals in subreddits:
@@ -241,21 +245,12 @@ class ScrollableLabel(BoxLayout):
         elif len(command) == 3:
             if (command[2] == 'next' or command[2] == 'previous') and command[1] != 'subreddits':
                 if nextprevious == True:
-                    subreddit = reddit.subreddit(command[1])
-                    submissions = subreddit.hot(limit = 100)
-
-                    for listvals in submissions:
-                        listofsubmissions.append(listvals)
                     self.handleMoreList(command[2])
                 else:
                     self.addWrongInput("Nothing to Display")
 
             elif (command[2] == 'next' or command[2] == 'previous') and command[1] == 'subreddits':
                 if nextprevioussubreddits == True:
-                    subreddits = reddit.subreddits.popular(limit = 100)
-
-                    for listvals in subreddits:
-                        listofsubreddits.append(listvals)
                     self.handleMoreSubreddits(command[2])
                 else:
                     self.addWrongInput("Nothing to Display")
@@ -382,14 +377,19 @@ class ScrollableLabel(BoxLayout):
                         comments = listofsubmissions[int(command[2])].comments
                         for comment in comments:
                             listofcomments.append(comment)
+
                         if len(listofcomments)>=10:
                             for i in range(0,10):
                                 self.addResults("[b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofcomments[i].body)
+                                self.addResults("[color=#9B9191][i]Posted By "+str(listofcomments[i].author)+"[/color][/i]")
+                                self.addResults("[color=#9B9191][i]"+str(listofcomments[i].ups)+" Upvotes[/color][/i]")
                             self.addNew()
                             countcomments = 10
                         else:
                             for i in range(0,len(listofcomments)):
                                 self.addResults("[b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofcomments[i].body)
+                                self.addResults("[color=#9B9191][i]Posted By "+str(listofcomments[i].author)+"[/color][/i]")
+                                self.addResults("[color=#9B9191][i]"+str(listofcomments[i].ups)+" Upvotes[/color][/i]")
                             self.addNew()
                     else:
                         self.addWrongInput("No Such Index")
@@ -415,10 +415,50 @@ class ScrollableLabel(BoxLayout):
                 if (temp<10):
                     temp = temp + 1
                     self.addResults("[b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofcomments[i].body)
+                    self.addResults("[color=#9B9191][i]Posted By "+str(listofcomments[i].author)+"[/color][/i]")
+                    self.addResults("[color=#9B9191][i]"+str(listofcomments[i].ups)+" Upvotes[/color][/i]")
             countcomments = countcomments + temp
             self.addNew()
         else:
             self.addWrongInput("No More Entries Available")
+
+    def runsearchCommand(self,command):
+        global links
+        global listed
+        global listofsubmissions
+        global countlist
+        global nextprevious
+        global nextpreviousnormal
+        global nextprevioussubreddits
+        if len(command) == 2:
+            nextpreviousnormal = False
+            nextprevious = False
+            nextprevioussubreddits = False
+            temp = 0
+            del links[:]
+            del listofsubmissions[:]
+            del listofsubreddits[:]
+            searchs = reddit.subreddit('all').search(command[1],limit = 100)
+
+            for listvals in searchs:
+                listofsubmissions.append(listvals)
+
+            for i in range(0,len(listofsubmissions)):
+                if temp<10:
+                    temp = temp + 1
+                    self.addResults("[b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofsubmissions[i].title)
+                    self.addResults("[color=#9B9191][i]("+listofsubmissions[i].url+")[/color][/i]")
+                    self.addResults("[color=#9B9191][i]"+str(listofsubmissions[i].ups)+" Upvotes with "+str(listofsubmissions[i].num_comments)+" Comments[/color][/i]")
+                    links.append(listofsubmissions[i].url)
+            listed = True
+            countlist = temp
+            if len(listofsubmissions) >= 10:
+                self.addResults("[b][color=#9B9191]{ [/color][color=#cccc00]next[/color][color=#9B9191] }[/color][/b]")
+                nextpreviousnormal = True
+            self.addNew()
+
+        else:
+            self.addWrongInput("Enter Something to Search")
 
     def __init__(self, **kwargs):
         super(ScrollableLabel, self).__init__(**kwargs)
