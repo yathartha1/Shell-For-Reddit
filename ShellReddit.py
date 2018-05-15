@@ -196,25 +196,28 @@ class ScrollableLabel(BoxLayout):
             del links[:]
             del listofsubmissions[:]
             del listofsubreddits[:]
-            subreddit = reddit.subreddit(command[1])
-            submissions = subreddit.hot(limit = 100)
+            try:
+                subreddit = reddit.subreddit(command[1])
+                submissions = subreddit.hot(limit = 100)
 
-            for listvals in submissions:
-                listofsubmissions.append(listvals)
-
-            for i in range(0,len(listofsubmissions)):
-                if temp<10:
-                    temp = temp + 1
-                    self.addResults("[b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofsubmissions[i].title)
-                    self.addResults("[color=#9B9191][i]("+listofsubmissions[i].url+")[/color][/i]")
-                    self.addResults("[color=#9B9191][i]"+str(listofsubmissions[i].ups)+" Upvotes with "+str(listofsubmissions[i].num_comments)+" Comments[/color][/i]")
-                    links.append(listofsubmissions[i].url)
-            listed = True
-            countlist = temp
-            if len(listofsubmissions) >= 10:
-                self.addResults("[b][color=#9B9191]{ [/color][color=#cccc00]next[/color][color=#9B9191] }[/color][/b]")
-                nextprevious = True
-            self.addNew()
+                for listvals in submissions:
+                    listofsubmissions.append(listvals)
+            except:
+                self.addWrongInput("Invalid Subreddit")
+            else:
+                for i in range(0,len(listofsubmissions)):
+                    if temp<10:
+                        temp = temp + 1
+                        self.addResults("[b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofsubmissions[i].title)
+                        self.addResults("[color=#9B9191][i]("+listofsubmissions[i].url+")[/color][/i]")
+                        self.addResults("[color=#9B9191][i]"+str(listofsubmissions[i].ups)+" Upvotes with "+str(listofsubmissions[i].num_comments)+" Comments[/color][/i]")
+                        links.append(listofsubmissions[i].url)
+                listed = True
+                countlist = temp
+                if len(listofsubmissions) >= 10:
+                    self.addResults("[b][color=#9B9191]{ [/color][color=#cccc00]next[/color][color=#9B9191] }[/color][/b]")
+                    nextprevious = True
+                self.addNew()
 
         elif len(command) == 2 and command[1] == 'subreddits':
             nextpreviousnormal = False
@@ -438,24 +441,27 @@ class ScrollableLabel(BoxLayout):
             del links[:]
             del listofsubmissions[:]
             del listofsubreddits[:]
-            searchs = reddit.subreddit('all').search(command[1],limit = 100)
+            try:
+                searchs = reddit.subreddit('all').search(command[1],limit = 100)
 
-            for listvals in searchs:
-                listofsubmissions.append(listvals)
-
-            for i in range(0,len(listofsubmissions)):
-                if temp<10:
-                    temp = temp + 1
-                    self.addResults("[b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofsubmissions[i].title)
-                    self.addResults("[color=#9B9191][i]("+listofsubmissions[i].url+")[/color][/i]")
-                    self.addResults("[color=#9B9191][i]"+str(listofsubmissions[i].ups)+" Upvotes with "+str(listofsubmissions[i].num_comments)+" Comments[/color][/i]")
-                    links.append(listofsubmissions[i].url)
-            listed = True
-            countlist = temp
-            if len(listofsubmissions) >= 10:
-                self.addResults("[b][color=#9B9191]{ [/color][color=#cccc00]next[/color][color=#9B9191] }[/color][/b]")
-                nextpreviousnormal = True
-            self.addNew()
+                for listvals in searchs:
+                    listofsubmissions.append(listvals)
+            except:
+                self.addWrongInput("Invalid Entry")
+            else:
+                for i in range(0,len(listofsubmissions)):
+                    if temp<10:
+                        temp = temp + 1
+                        self.addResults("[b][color=#9B9191]{ [/color][color=#33cc33]"+str(i)+"[/color][color=#9B9191] }[/color][/b] "+listofsubmissions[i].title)
+                        self.addResults("[color=#9B9191][i]("+listofsubmissions[i].url+")[/color][/i]")
+                        self.addResults("[color=#9B9191][i]"+str(listofsubmissions[i].ups)+" Upvotes with "+str(listofsubmissions[i].num_comments)+" Comments[/color][/i]")
+                        links.append(listofsubmissions[i].url)
+                listed = True
+                countlist = temp
+                if len(listofsubmissions) >= 10:
+                    self.addResults("[b][color=#9B9191]{ [/color][color=#cccc00]next[/color][color=#9B9191] }[/color][/b]")
+                    nextpreviousnormal = True
+                self.addNew()
 
         else:
             self.addWrongInput("Enter Something to Search")
