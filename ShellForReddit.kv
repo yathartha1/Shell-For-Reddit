@@ -19,6 +19,7 @@
         text_size: self.width, None
         size_hint_y: None
         height: self.texture_size[1]
+        padding_x: 10
 
     Label:
         canvas.before:
@@ -33,6 +34,7 @@
         size_hint_y: None
         height: self.texture_size[1]
         markup: True
+        padding_x: 10
 
     Label:
         canvas.before:
@@ -47,6 +49,7 @@
         size_hint_y: None
         height: self.texture_size[1]
         markup: True
+        padding_x: 10
 
     ScrollView:
         size: self.size
@@ -56,6 +59,7 @@
             Label:
                 id: labelid
                 padding_y: 2
+                padding_x: 10
                 pos_hint: {'top': 1}
                 text: root.idvalue
                 font_size: 13
@@ -67,6 +71,7 @@
             TextInput:
                 id: inputvalue
                 font_size: 13
+                padding_x: 10
                 pos_hint: {'top': 1}
                 size_hint_y: None
                 height: 25
