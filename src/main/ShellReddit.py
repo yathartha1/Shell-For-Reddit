@@ -8,11 +8,13 @@ from kivy.properties import ObjectProperty
 from kivy.core.text import LabelBase
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
+from kivy.lang import Builder
 import APIAuth
 
+Builder.load_file('../ShellForReddit.kv')
 reddit = APIAuth.getAuth()
 
-LabelBase.register(name = "Capture", fn_regular = "Capture_it_2.ttf")
+LabelBase.register(name = "Capture", fn_regular = "../../font/Capture_it_2.ttf")
 
 base_commands = ['cls','search','view','ls']
 links = []
