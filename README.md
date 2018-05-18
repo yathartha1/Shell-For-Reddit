@@ -1,6 +1,13 @@
 # Shell-For-Reddit
 
-Shell For Reddit is a linux shell emulator written in Python that lets you browse reddit via command line
+Shell For Reddit is a linux shell emulator written in Python that lets you browse reddit via command line.
+It is available for macOS.
+
+## Steps to Run the Application
+* Download the dmg file located in the Application folder
+* Double click the dmg file
+* Copy the Shell-For-Reddit application into your Applications Folder
+* Run the application
 
 **Features**
 
