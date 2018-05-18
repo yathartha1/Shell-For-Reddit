@@ -1,20 +1,17 @@
 import kivy
+import sys
 import webbrowser
-kivy.require("1.10.0")
+kivy.require("1.10.1")
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty
 from kivy.properties import ObjectProperty
-from kivy.core.text import LabelBase
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
-from kivy.lang import Builder
 import APIAuth
+sys.path.append('../font/')
 
-Builder.load_file('../ShellForReddit.kv')
 reddit = APIAuth.getAuthDefault()
-
-LabelBase.register(name = "Capture", fn_regular = "../../font/Capture_it_2.ttf")
 
 base_commands = ['clear','search','view','ls','exit']
 links = []
@@ -65,6 +62,11 @@ class CapitalInput(TextInput):
             key = (None, None, k, 1)
             self._key_up(key)
 
+    def do_backspace(self, from_undo=False, mode='bkspc'):
+        global st
+        super().do_backspace()
+        st = st[:-1]
+
 
 ################## Generate new command lines ##################################
 
@@ -72,8 +74,9 @@ class CapitalInput(TextInput):
 class ScrollableLabel(BoxLayout):
     stackid=ObjectProperty(None)
     idvalue = StringProperty("[color=#33cc33][b]guest@reddit:$[/b][/color]")
-
     def addNew(self):
+        self.ids.stackid.size_hint_y = None
+        self.ids.stackid.bind(minimum_height=self.ids.stackid.setter('height'))
         l = Label( id = 'labelid',
                     text = "[color=#33cc33][b]guest@reddit:$[/b][/color]",
                     padding_y = 2,
@@ -549,9 +552,6 @@ class ScrollableLabel(BoxLayout):
 
     def __init__(self, **kwargs):
         super(ScrollableLabel, self).__init__(**kwargs)
-        self.stackid.size_hint_y = None
-        self.stackid.bind(minimum_height=self.stackid.setter('height'))
-
 
 ################################################################################
 
