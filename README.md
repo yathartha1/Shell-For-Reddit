@@ -5,7 +5,7 @@ It is available for macOS.
 
 ## Steps to Run the Application
 * Download the dmg file located in the Application folder
-* Double click the dmg file
+* Open the dmg file
 * Copy the Shell-For-Reddit application into your Applications Folder
 * Run the application
 
