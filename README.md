@@ -59,5 +59,5 @@ It is available for macOS.
 
 ## Libraries Used
 
-- [praw](https://github.com/praw-dev/praw)
-- [kivy](https://github.com/kivy/kivy)
+- [Praw](https://github.com/praw-dev/praw)
+- [Kivy](https://github.com/kivy/kivy)
