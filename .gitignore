@@ -1,2 +1,7 @@
 APIAuth.py
 __pycache__
+Licenses/Docutils
+Licenses/glew
+Licenses/gstreamer
+Licenses/pygments
+Licenses/sdl2
