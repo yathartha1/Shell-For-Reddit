@@ -57,7 +57,7 @@ It is available for macOS.
 * **exit**
   * Description: Exits the application
 
-**Libraries**
+## Libraries Used
 
 - [praw](https://github.com/praw-dev/praw)
 - [kivy](https://github.com/kivy/kivy)
