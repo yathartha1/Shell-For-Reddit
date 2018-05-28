@@ -4,7 +4,7 @@ Shell For Reddit is a linux shell emulator written in Python that lets you brows
 It is available for macOS.
 
 ## Steps to Run the Application
-* Download the dmg file located in the Application folder
+* Download the dmg file from [github](https://github.com/yathartha1/Shell-For-Reddit/releases)
 * Open the dmg file
 * Copy the Shell-For-Reddit application into your Applications Folder
 * Run the application
